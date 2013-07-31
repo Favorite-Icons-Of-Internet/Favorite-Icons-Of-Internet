@@ -1,7 +1,6 @@
 <HTML>
 <HEAD>
 <TITLE>Favorite Icons of Internet</TITLE>
-<base target="blank"/>
 <style>
 body { margin: 0; overflow-x: hidden; background-color: white}
 img { border: 0; display: block; margin: 0; padding: 0; }
@@ -17,7 +16,7 @@ function createImageMaps(chunk, domains) {
 
 	var map = '<map name="chunk' + chunk + '">\n';
 	for (var i in domains) {
-		map += '<area href="http://www.' + domains[i] + '/" title="' + domains[i] + '" shape="rect" coords="' + (x + 1) + ',' + (y + 1) + ',' + (x + 18) + ',' + (y + 18) + '" />\n';
+		map += '<area target="_blank" href="http://www.' + domains[i] + '/" title="' + domains[i] + '" shape="rect" coords="' + (x + 1) + ',' + (y + 1) + ',' + (x + 18) + ',' + (y + 18) + '" />\n';
 		x += tile_width;
 
 		if (x >= page_width) {
