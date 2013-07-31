@@ -12,7 +12,7 @@ function createImageMaps(chunk, domains) {
 
 	var tile_width = 18; // should be more then 16
 	var tile_height = 18; // should be more then 16
-	var page_width = 990;
+	var page_width = PAGEWIDTH;
 
 	var map = '<map name="chunk' + chunk + '">\n';
 	for (var i in domains) {

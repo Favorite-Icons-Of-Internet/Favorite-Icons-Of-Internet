@@ -182,6 +182,7 @@ while(my @subset = splice(@icons, 0, $tiles_x * $tiles_y_max))
 	binmode(FILE);
 	my $hash = Digest::MD5->new->addfile(*FILE)->hexdigest;
 
+	$html .= '<script>var PAGEWIDTH = '.$page_width.';</script>';
 	$html .= '<img src="'.$hosts[$current_host].'hash/'.$hash.'/'.$outfile.'" alt="Favorite icons of internet" width="'.$page_width.'" height="'.(int(ceil($#subset / $tiles_x))*$tile_height + 2).'" usemap="#chunk'.$chunk.'" />'."\n";
 
 	$request_counter++;

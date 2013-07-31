@@ -1,4 +1,4 @@
-WIDTH=1280
+WIDTH=1024
 
 html:
 	head -n30000 Quantcast-Top-Million.txt | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
