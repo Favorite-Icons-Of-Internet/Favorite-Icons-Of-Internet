@@ -1,13 +1,18 @@
-WIDTH=1024
+WIDTH=1280
+NUMICONS=30000
+# Quantcast top 1M
+DOMAINLIST=Quantcast-Top-Million.txt
+# Alexa top 1M
+#DOMAINLIST=top-1m.csv
 
 html:
-	head -n30000 Quantcast-Top-Million.txt | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
+	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
 
 images:
-	head -n30000 Quantcast-Top-Million.txt | perl geticons.pl --width=${WIDTH}
+	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --width=${WIDTH}
 
 parallel:
-	head -n30000 Quantcast-Top-Million.txt | xargs -P10 -n1 perl geticons.pl --width=${WIDTH} --nogenpage >run.log 2>&1
+	head -n${NUMICONS} ${DOMAINLIST} | xargs -P10 -n1 perl geticons.pl --width=${WIDTH} --nogenpage >run.log 2>&1
 
 test:
-	head -n3000 Quantcast-Top-Million.txt | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
+	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}

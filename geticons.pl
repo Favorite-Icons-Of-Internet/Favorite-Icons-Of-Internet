@@ -133,8 +133,7 @@ my $fullheight = $tile_height * $totalitems / $tiles_x;
 
 #print "\ntile_width: $tile_width\ntile_height: $tile_height\nmargin: $margin\ngeometry: $geometry\ndesired_page_width: $desired_page_width\npage_width: $page_width\ntiles_x: $tiles_x\ntiles_y_max: $tiles_y_max\ntotalitems: $totalitems\nfullheight: $fullheight\n\n";
 
-#my $html = '<div style="height: '.$fullheight.'px">'."\n";
-my $html = '';
+my $html = "<script>var PAGEWIDTH = $page_width;</script>\n";
 
 print "Generating image: ";
 
@@ -182,7 +181,6 @@ while(my @subset = splice(@icons, 0, $tiles_x * $tiles_y_max))
 	binmode(FILE);
 	my $hash = Digest::MD5->new->addfile(*FILE)->hexdigest;
 
-	$html .= '<script>var PAGEWIDTH = '.$page_width.';</script>';
 	$html .= '<img src="'.$hosts[$current_host].'hash/'.$hash.'/'.$outfile.'" alt="Favorite icons of internet" width="'.$page_width.'" height="'.(int(ceil($#subset / $tiles_x))*$tile_height + 2).'" usemap="#chunk'.$chunk.'" />'."\n";
 
 	$request_counter++;
