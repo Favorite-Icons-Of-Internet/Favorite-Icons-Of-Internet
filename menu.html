@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<TITLE>Favorite Icons of Internet</TITLE>
+<base target="blank"/>
+<style>
+body { margin: 0; overflow-x: hidden; background-color: white}
+img { border: 0; display: block; margin: 0; padding: 0; }
+</style>
+<script>
+function createImageMaps(chunk, domains) {
+	var x = 0;
+	var y = 0;
+
+	var tile_width = 18; // should be more then 16
+	var tile_height = 18; // should be more then 16
+	var page_width = 990;
+
+	var map = '<map name="chunk' + chunk + '">\n';
+	for (var i in domains) {
+		map += '<area href="http://www.' + domains[i] + '/" title="' + domains[i] + '" shape="rect" coords="' + (x + 1) + ',' + (y + 1) + ',' + (x + 18) + ',' + (y + 18) + '" />\n';
+		x += tile_width;
+
+		if (x >= page_width) {
+			x = 0;
+			y += tile_height;
+		}
+	}
+	map += '</map>';
+
+	var mapel = document.createElement('div');
+	mapel.innerHTML = map;
+
+	document.body.appendChild(mapel);
+}
+
+</script>
+</HEAD>
+<BODY>
+<img src="http://www.favoriteiconsofinternet.com/hash/829d77692760f5962a6a26e00e007a1e/large_1_1024x100.png" alt="Favorite icons of internet" width="990" height="1802" usemap="#chunk1" />
+<img src="http://www.favoriteiconsofinternet.com/hash/30b82271afd69f1db066f1da56e92c6f/large_2_1024x100.png" alt="Favorite icons of internet" width="990" height="1586" usemap="#chunk2" />
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-817839-31']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<script src="http://www.favoriteiconsofinternet.com/hash/11cdeae8207beb1066ccd1824f01f8f1/chunk1.js" async="async"></script>
+<script src="http://www.favoriteiconsofinternet.com/hash/d20b82a730a3a85094a4a822f3cd73b4/chunk2.js" async="async"></script>
+
+<div style="position: absolute; top: 110px; left: 756px; background: white">
+<img src="http://s3.amazonaws.com/isocket-creatives/faff6d465a52b20999f4b919a5e61eca.png"/>
+</div>
+
+<div style="position: absolute; top: 110px; left: 630px; background: white">
+<img src="https://isocket-creatives.s3.amazonaws.com/dc49a31705f9bc449caa65f68d97c431869b1b87.jpg"/>
+</div>
+
+<div style="position: absolute; top: 236px; left: 756px; background: white">
+<img src="https://isocket-creatives.s3.amazonaws.com/3c2055718082c6d2c76976704c1817a4a27c0367.png"/>
+</div>
+
+<div style="position: absolute; top: 236px; left: 630px; background: white">
+<img src="https://isocket-creatives.s3.amazonaws.com/de525552faf423df9e2e82cd93a1f995290fcda8.png"/>
+</div>
+
+<div style="position: absolute; top: 398px; left: 630px; background: white">
+
+<img src="prints.png"/>
+</div>
+</BODY></HTML>
