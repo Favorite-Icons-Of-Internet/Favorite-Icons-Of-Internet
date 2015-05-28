@@ -1,9 +1,9 @@
 WIDTH=1280
-NUMICONS=30000
+NUMICONS=50000
 # Quantcast top 1M
-DOMAINLIST=Quantcast-Top-Million.txt
+#DOMAINLIST=Quantcast-Top-Million.txt
 # Alexa top 1M
-#DOMAINLIST=top-1m.csv
+DOMAINLIST=top-1m.csv
 
 html:
 	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
