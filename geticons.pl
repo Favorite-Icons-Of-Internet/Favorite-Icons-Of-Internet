@@ -38,7 +38,7 @@ while(<>) {
 	print $domain."\t";
 
 	if ($genimages) {
-		print "images";
+		print "images: $domain";
 
 		if (!$ignoreproblems && -f "problems/$domain") {
 			print " had problems before, skipping\n";
