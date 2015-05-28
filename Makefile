@@ -3,10 +3,14 @@ NUMICONS=50000
 # Quantcast top 1M
 #DOMAINLIST=Quantcast-Top-Million.txt
 # Alexa top 1M
-DOMAINLIST=top-1m.csv
+#DOMAINLIST=top-1m.csv
+DOMAINLIST=pngdomains.txt
 
 html:
 	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
+
+nofetch:
+	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nofetch --width=${WIDTH}
 
 images:
 	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --width=${WIDTH}
