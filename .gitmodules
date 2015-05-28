@@ -1,0 +1,3 @@
+[submodule "DBUpgrade"]
+	path = DBUpgrade
+	url = git@github.com:sergeychernyshev/DBUpgrade.git
