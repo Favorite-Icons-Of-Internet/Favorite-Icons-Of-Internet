@@ -34,11 +34,12 @@ while(<>) {
 	my ($num, $domain) = split(/\t|,/);
 
 	$domain=~s/\s//g;
+	$domain=~s/\/.*$//g;
 
 	print $domain."\t";
 
 	if ($genimages) {
-		print "images: $domain";
+		print "images: ";
 
 		if (!$ignoreproblems && -f "problems/$domain") {
 			print " had problems before, skipping\n";
