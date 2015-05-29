@@ -20,6 +20,17 @@ $versions[_]['up'][] = "";
 $versions[_]['down'][]	= "";
 */
 
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION _
+ * Getting rid of the icon blob (will store on file system
+*/
+$versions[2]['up'][] = "ALTER TABLE `icons` DROP `optimized_png_content`";
+$versions[2]['down'][]	= "ALTER TABLE `icons` ADD `optimized_png_content` BLOB NOT NULL COMMENT 'Content of optimized image file converted to PNG'";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 1
+ * First draft of schema
+*/
 $versions[1]['up'][] = "CREATE TABLE `domains` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Domain ID',
 `alexa_rank` int(10) unsigned NULL DEFAULT NULL COMMENT 'Rank of the domain, e.g. global order',
