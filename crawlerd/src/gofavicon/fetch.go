@@ -1,24 +1,29 @@
 package gofavicon
 
 import (
-	"net/http"
 	"io/ioutil"
+	"net/http"
+	"time"
+)
+
+const (
+	httpTimeout = 10 * time.Second
 )
 
 var (
-	transport = &http.Transport{DisableKeepAlives: true}
-	client = &http.Client{Transport: transport}
+	client = &http.Client{
+		Transport: &http.Transport{DisableKeepAlives: true},
+		Timeout:   httpTimeout,
+	}
 )
 
-// fetch URL
+// Fetch URL using HTTP GET
 func Fetch(url string) ([]byte, error) {
 	res, err := client.Get(url)
 	if err != nil {
 		return nil, err
 	}
-
 	defer res.Body.Close()
-
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err

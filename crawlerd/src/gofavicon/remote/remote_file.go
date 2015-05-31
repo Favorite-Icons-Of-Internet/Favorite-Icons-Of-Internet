@@ -18,7 +18,7 @@ var (
 	errUnknownFormat = errors.New("Unknown dataurl format")
 
 	transport = &http.Transport{DisableKeepAlives: true}
-	client = &http.Client{Transport: transport}
+	client    = &http.Client{Transport: transport}
 )
 
 func Get(u string) (*RemoteFile, error) {

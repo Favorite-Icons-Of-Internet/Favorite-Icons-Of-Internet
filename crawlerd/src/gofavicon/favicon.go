@@ -2,8 +2,8 @@ package gofavicon
 
 import (
 	"errors"
-	"net/url"
 	"gofavicon/remote"
+	"net/url"
 )
 
 // Favicon for site
@@ -25,7 +25,7 @@ type Favicon struct {
 type Resource string
 
 var (
-	errNoRel = errors.New("favicon is not defined in link tag")
+	errNoRel  = errors.New("favicon is not defined in link tag")
 	errNoFile = errors.New("cant download file")
 )
 
@@ -53,7 +53,6 @@ func Extract(res string) (*Favicon, error) {
 		icoUrl = relIcon.IconURL
 	}
 
-
 	file, err := remote.Get(icoUrl)
 	if err != nil {
 		return nil, err
@@ -70,7 +69,6 @@ func Extract(res string) (*Favicon, error) {
 
 	return i, nil
 }
-
 
 func (r Resource) Parsed() *url.URL {
 	u, _ := url.Parse(string(r))
