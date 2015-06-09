@@ -21,7 +21,14 @@ $versions[_]['down'][]	= "";
 */
 
 /* -------------------------------------------------------------------------------------------------------
- * VERSION _
+ * VERSION 3
+ * Making domain name a unique key
+*/
+$versions[3]['up'][] = "ALTER TABLE  `domains` ADD UNIQUE KEY unique_domain (`domain`)";
+$versions[3]['down'][]	= "ALTER TABLE `domains` DROP INDEX unique_domain";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 2
  * Getting rid of the icon blob (will store on file system
 */
 $versions[2]['up'][] = "ALTER TABLE `icons` DROP `optimized_png_content`";
