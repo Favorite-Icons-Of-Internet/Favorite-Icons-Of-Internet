@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "domain": "google.com",
+        "previous_hash": "aqwerdqweafv45vacrqe",
+        "previous_fetch_time": "2015-04-23T18:25:43.511Z"
+    },
+    {
+        "id": "2",
+        "domain": "facebook.com",
+        "previous_hash": "dffdqdqwdqer23",
+        "previous_fetch_time": "2015-04-23T18:20:43.511Z"
+    },
+    {
+        "id": "3",
+        "domain": "yahoo.com",
+        "previous_hash": "sdgdwdedewr55",
+        "previous_fetch_time": "2015-04-23T18:50:43.511Z"
+    }
+]
