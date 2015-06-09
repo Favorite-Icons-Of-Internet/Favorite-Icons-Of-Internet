@@ -21,6 +21,16 @@ $versions[_]['down'][]	= "";
 */
 
 /* -------------------------------------------------------------------------------------------------------
+ * VERSION 4
+ * Adding previous hash and fetch time columns
+*/
+$versions[4]['up'][] = "ALTER TABLE `domains`
+ADD `last_hash` varchar(100) NULL DEFAULT NULL COMMENT 'HASH of icon file previously fetched',
+ADD `last_fetch_time` datetime DEFAULT NULL COMMENT 'Date of last icon retrieval'
+";
+$versions[4]['down'][]	= "ALTER TABLE `domains` DROP last_hash, DROP last_fetch_time";
+
+/* -------------------------------------------------------------------------------------------------------
  * VERSION 3
  * Making domain name a unique key
 */
