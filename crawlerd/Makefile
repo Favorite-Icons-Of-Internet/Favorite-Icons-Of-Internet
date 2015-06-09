@@ -20,7 +20,7 @@ env:
 	$(GO) env
 
 test:
-	$(GOTEST) gofavicon
+	$(GOTEST) gofavicon gofavicon/cmd/crawlerd/
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=386 $(GOINSTALL) $(APPNAME)/...

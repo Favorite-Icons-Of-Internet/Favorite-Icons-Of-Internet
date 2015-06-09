@@ -39,11 +39,12 @@ func (parser regexpParser) Parse(html []byte) (*RelIcon, bool) {
 		sizes := findFirst(sizesRe, match)
 
 		if len(rel) > 0 && len(href) > 0 {
-			ico := &RelIcon{
-				IconURL: href,
-				RelType: typ,
-				Sizes:   sizes,
+			ico, err := NewRelIcon(href)
+			if err != nil {
+				return nil, false
 			}
+			ico.RelType = typ
+			ico.Sizes = sizes
 			return ico, true
 		}
 	}
