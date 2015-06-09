@@ -32,6 +32,7 @@ type Res struct {
 	NewFetchTime      string `json:"new_fetch_time"`
 }
 
+// Extract favicon
 func extract(r *Req) (*Res, error) {
 	e := gofavicon.NewExtractor()
 	url := r.Domain
@@ -46,9 +47,7 @@ func extract(r *Req) (*Res, error) {
 
 	var changed bool
 
-	h := sha1.New()
-	h.Write(ico.Image)
-	hash := string(h.Sum(nil))
+	hash := fmt.Sprintf("%x", sha1.Sum(ico.Image))
 
 	if !strings.EqualFold(hash, r.PreviousHash) {
 		changed = true
@@ -61,16 +60,17 @@ func extract(r *Req) (*Res, error) {
 		filepath = file.Name()
 	}
 
-	_ = ico
-	res := &Res{}
-	res.Domain = r.Domain
-	res.ID = r.ID
-	res.PreviousHash = r.PreviousHash
-	res.PreviousFetchTime = r.PreviousFetchTime
-	res.NewFetchTime = time.Now().Format(time.RFC3339)
-	res.NewHash = hash
-	res.Changed = changed
-	res.IconFile = filepath
+	res := &Res{
+		Domain: r.Domain,
+		ID: r.ID,
+		PreviousHash: r.PreviousHash,
+		PreviousFetchTime: r.PreviousFetchTime,
+		NewFetchTime: time.Now().Format(time.RFC3339),
+		NewHash: hash,
+		Changed: changed,
+		IconFile: filepath,
+	}
+
 	return res, nil
 }
 
@@ -103,7 +103,7 @@ func main() {
 
 	go processResult(outCh)
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 10; i++ {
 		ws.Add(1)
 		go processRequest(reqCh, outCh, &ws)
 	}
