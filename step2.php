@@ -12,7 +12,7 @@ if ($db->query("SET time_zone = '+00:00'") === FALSE) {
 	throw new Exception("Can't set UTC timezone: ".$db->error);
 }
 
-if ($stmt = $db->prepare("SELECT id, domain, last_hash, DATE_FORMAT(last_fetch_time,'%Y-%m-%dT%TZ') FROM domains WHERE alexa_rank IS NOT NULL LIMIT 5"))
+if ($stmt = $db->prepare("SELECT id, domain, last_hash, DATE_FORMAT(last_fetch_time,'%Y-%m-%dT%TZ') FROM domains WHERE alexa_rank IS NOT NULL"))
 {
 	if (!$stmt->execute())
 	{

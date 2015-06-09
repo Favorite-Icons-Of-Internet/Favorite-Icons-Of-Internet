@@ -45,7 +45,7 @@ $line = TRUE;
 while($line !== FALSE) {
 	$batch_insert = "INSERT INTO domains (alexa_rank, domain) VALUES ";
 	$first = TRUE;
-	for ($i = BATCH_INSERT_SIZE; $i > 0; $i--) {
+	for ($i = 0; $i < BATCH_INSERT_SIZE; $i++) {
 		$line = fgets($STDIN);
 		if ($line == FALSE) {
 			break 1;
@@ -82,6 +82,10 @@ while($line !== FALSE) {
 
 	}
 	$batch_insert .= " ON DUPLICATE KEY UPDATE alexa_rank = VALUES(alexa_rank)";
+
+	if ($i == 0) {
+		continue;
+	}
 
 	if (!$db->query($batch_insert))
 	{
