@@ -21,7 +21,24 @@ $versions[_]['down'][]	= "";
 */
 
 /* -------------------------------------------------------------------------------------------------------
- * VERSION _
+ * VERSION 4
+ * Adding previous hash and fetch time columns
+*/
+$versions[4]['up'][] = "ALTER TABLE `domains`
+ADD `last_hash` varchar(100) NULL DEFAULT NULL COMMENT 'HASH of icon file previously fetched',
+ADD `last_fetch_time` datetime DEFAULT NULL COMMENT 'Date of last icon retrieval'
+";
+$versions[4]['down'][]	= "ALTER TABLE `domains` DROP last_hash, DROP last_fetch_time";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 3
+ * Making domain name a unique key
+*/
+$versions[3]['up'][] = "ALTER TABLE  `domains` ADD UNIQUE KEY unique_domain (`domain`)";
+$versions[3]['down'][]	= "ALTER TABLE `domains` DROP INDEX unique_domain";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 2
  * Getting rid of the icon blob (will store on file system
 */
 $versions[2]['up'][] = "ALTER TABLE `icons` DROP `optimized_png_content`";
