@@ -12,3 +12,7 @@ perl step4.pl --folder $TEMP_FOLDER >$TEMP_FOLDER/favicon.manifest
 
 tar -C /tmp/$TEMP_NAME -c . |gzip >/tmp/$TEMP_NAME.tar.gz
 rm -rf $TEMP_FOLDER
+
+aws s3 cp /tmp/$TEMP_NAME.tar.gz s3://favoriteiconsofinternet.com/results/$TEMP_NAME.tar.gz
+
+rm /tmp/$TEMP_NAME.tar.gz
