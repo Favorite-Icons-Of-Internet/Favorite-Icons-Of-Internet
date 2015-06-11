@@ -78,7 +78,7 @@ while($line !== FALSE) {
 			$batch_insert .= ",";
 		}
 
-		$batch_insert .= "(" . intval($rank) . ",'" . mysql_real_escape_string($domain) . "')"; 
+		$batch_insert .= "(" . intval($rank) . ",'" . $db->real_escape_string($domain) . "')"; 
 
 	}
 	$batch_insert .= " ON DUPLICATE KEY UPDATE alexa_rank = VALUES(alexa_rank)";
