@@ -1,9 +1,12 @@
 package gofavicon
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
+	"time"
 )
 
 type Extractor struct {
@@ -16,9 +19,19 @@ type Content struct {
 	Location *url.URL
 }
 
+type fetchError struct {
+	URL string
+	Reason error
+}
+
+func (err fetchError) Error() string {
+	return fmt.Sprintf("Fetch failed:\n\tURL: %s\n\tError: %s\n", err.URL, err.Reason)
+}
+
+
 var DefaultHttpClient = &http.Client{
 	Transport: &http.Transport{DisableKeepAlives: true},
-	Timeout:   httpTimeout,
+	Timeout:   10 * time.Second,
 }
 
 var DefaultParser = NewReParser()
@@ -31,6 +44,10 @@ func NewExtractor() *Extractor {
 }
 
 func (e Extractor) Extract(u string) (*Favicon, error) {
+	if !strings.HasPrefix(u, "http://") && !strings.HasPrefix(u, "https") {
+		u = fmt.Sprintf("http://%s", u)
+	}
+
 	ico, err := e.ExtractFromURL(u)
 	if err != nil {
 		return nil, err
@@ -51,7 +68,7 @@ func (e Extractor) Extract(u string) (*Favicon, error) {
 func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 	page, err := e.Fetch(u)
 	if err != nil {
-		return nil, err
+		return nil, fetchError{u, err}
 	}
 
 	rel, ok := e.Parser.Parse(page.Body)
@@ -67,12 +84,12 @@ func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 	} else {
 		p := *page.Location
 		p.Path = rel.IconURL.Path
-		faviconURL = rel.IconURL.String()
+		faviconURL = p.String()
 	}
 
 	icon, err := e.Fetch(faviconURL)
 	if err != nil {
-		return nil, err
+		return nil, fetchError{u, err}
 	}
 
 	i := &Favicon{
@@ -86,13 +103,13 @@ func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 func (e Extractor) ExtractDefault(s string) (*Favicon, error) {
 	u, err := url.Parse(s)
 	if err != nil {
-		return nil, err
+		return nil, fetchError{s, err}
 	}
 
 	faviconURL := DefaultFaviconURL(u)
 	icon, err := e.Fetch(faviconURL)
 	if err != nil {
-		return nil, err
+		return nil, fetchError{s, err}
 	}
 
 	i := &Favicon{
