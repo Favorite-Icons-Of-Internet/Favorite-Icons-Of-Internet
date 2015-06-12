@@ -77,6 +77,21 @@ func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 		return nil, nil
 	}
 
+	if rel.IsEmbedded() {
+		_, bytes, err := rel.Embedded()
+
+		if err != nil {
+			return nil, fetchError{rel.IconURL.String(), err}
+		}
+
+		i := &Favicon{
+			ImageURL: rel.IconURL.String(),
+			Image: bytes,
+		}
+
+		return i, nil
+	}
+
 	var faviconURL string
 
 	if rel.IsAbsURL() {
