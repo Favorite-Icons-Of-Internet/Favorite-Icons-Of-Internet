@@ -15,14 +15,14 @@ import (
 )
 
 type Req struct {
-	ID                string `json:"id"`
+	ID                interface{} `json:"id"`
 	Domain            string `json:"domain"`
 	PreviousHash      string `json:"previous_hash"`
 	PreviousFetchTime string `json:"previous_fetch_time"`
 }
 
 type Res struct {
-	ID                string `json:"id"`
+	ID                interface{} `json:"id"`
 	Domain            string `json:"domain"`
 	PreviousHash      string `json:"previous_hash"`
 	PreviousFetchTime string `json:"previous_fetch_time"`
@@ -35,12 +35,8 @@ type Res struct {
 // Extract favicon
 func extract(r *Req) (*Res, error) {
 	e := gofavicon.NewExtractor()
-	url := r.Domain
-	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https") {
-		url = fmt.Sprintf("http://%s", url)
-	}
 
-	ico, err := e.Extract(url)
+	ico, err := e.Extract(r.Domain)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +74,8 @@ func processRequest(rch <-chan *Req, outCh chan<- *Res, ws *sync.WaitGroup) {
 	for r := range rch {
 		res, err := extract(r)
 		if err != nil {
-
+			log.Println(err)
+			continue
 		}
 		outCh <- res
 	}
@@ -87,15 +84,16 @@ func processRequest(rch <-chan *Req, outCh chan<- *Res, ws *sync.WaitGroup) {
 
 func processResult(res <-chan *Res) {
 	for r := range res {
-		bytes, _ := json.Marshal(&r)
-		fmt.Println(string(bytes))
+		bytes, err := json.Marshal(&r)
+		if err != nil {
+			log.Println(err)
+		} else {
+			fmt.Println(string(bytes))
+		}
 	}
 }
 
 func main() {
-	reader := bufio.NewScanner(os.Stdin)
-	reader.Split(TextSplit)
-
 	var reqCh = make(chan *Req, 10)
 	var outCh = make(chan *Res)
 
@@ -108,35 +106,22 @@ func main() {
 		go processRequest(reqCh, outCh, &ws)
 	}
 
+	reader := bufio.NewScanner(os.Stdin)
 	for reader.Scan() {
-		data := reader.Bytes()
+		data := []byte(reader.Text())
 
-		var requests []*Req
-		err := json.Unmarshal(data, &requests)
+		var req *Req
+		err := json.Unmarshal(data, &req)
 		if err != nil {
-			log.Print(err)
+			log.Println(err)
 			continue
 		}
 
-		for _, r := range requests {
-			reqCh <- r
-		}
+		reqCh <- req
 	}
 
 	close(reqCh)
 	ws.Wait()
 
 	close(outCh)
-}
-
-// custom split function for reader
-// read all from stdin until atEOF reached.
-func TextSplit(data []byte, atEOF bool) (advanced int, token []byte, err error) {
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
-	}
-	if atEOF {
-		return len(data), data, nil
-	}
-	return 0, nil, nil
 }

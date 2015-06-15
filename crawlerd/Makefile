@@ -5,28 +5,20 @@ GOINSTALL=$(GOCMD) install
 GOTEST=$(GOCMD) test
 GODEP=$(GOTEST) -i
 
-GOPATH:=$(CURDIR)/_vendor:$(CURDIR)/
+export GOPATH:=$(CURDIR)/_vendor:$(CURDIR)/
 
 APPNAME = gofavicon
-DISTDIR = dist
 
-all: dist
+all: clean build
 
 clean:
 	rm -rf bin
-	rm -rf $(DISTDIR)
 
 env:
-	$(GO) env
+	$(GOCMD) env
 
 test:
 	$(GOTEST) gofavicon gofavicon/cmd/crawlerd/
 
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=386 $(GOINSTALL) $(APPNAME)/...
 	CGO_ENABLED=0 $(GOINSTALL) $(APPNAME)/...
-
-dist: clean build
-	mkdir $(DISTDIR)
-	cp -R bin/linux_386/ $(DISTDIR)
-	echo "Dist done"
