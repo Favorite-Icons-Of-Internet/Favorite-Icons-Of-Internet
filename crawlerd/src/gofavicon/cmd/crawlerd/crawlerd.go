@@ -53,7 +53,9 @@ func extract(r *Req) (*Res, error) {
 	if changed {
 		file, _ := ioutil.TempFile(os.TempDir(), "")
 		file.Write(ico.Image)
-		filepath = file.Name()
+		oldpath := file.Name()
+		filepath = oldpath + ".ico"
+		os.Rename(oldpath, filepath)
 	}
 
 	res := &Res{
