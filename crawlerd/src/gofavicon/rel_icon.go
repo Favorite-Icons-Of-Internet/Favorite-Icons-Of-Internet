@@ -1,10 +1,10 @@
 package gofavicon
 
 import (
+	"encoding/base64"
+	"errors"
 	"net/url"
 	"strings"
-	"errors"
-	"encoding/base64"
 )
 
 var ErrUnknownFormat = errors.New("Unknown dataurl format")

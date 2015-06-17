@@ -20,14 +20,13 @@ type Content struct {
 }
 
 type fetchError struct {
-	URL string
+	URL    string
 	Reason error
 }
 
 func (err fetchError) Error() string {
 	return fmt.Sprintf("Fetch failed:\n\tURL: %s\n\tError: %s\n", err.URL, err.Reason)
 }
-
 
 var DefaultHttpClient = &http.Client{
 	Transport: &http.Transport{DisableKeepAlives: true},
@@ -86,7 +85,7 @@ func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 
 		i := &Favicon{
 			ImageURL: rel.IconURL.String(),
-			Image: bytes,
+			Image:    bytes,
 		}
 
 		return i, nil

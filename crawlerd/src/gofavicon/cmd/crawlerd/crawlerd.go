@@ -16,20 +16,20 @@ import (
 
 type Req struct {
 	ID                interface{} `json:"id"`
-	Domain            string `json:"domain"`
-	PreviousHash      string `json:"previous_hash"`
-	PreviousFetchTime string `json:"previous_fetch_time"`
+	Domain            string      `json:"domain"`
+	PreviousHash      string      `json:"previous_hash"`
+	PreviousFetchTime string      `json:"previous_fetch_time"`
 }
 
 type Res struct {
 	ID                interface{} `json:"id"`
-	Domain            string `json:"domain"`
-	PreviousHash      string `json:"previous_hash"`
-	PreviousFetchTime string `json:"previous_fetch_time"`
-	Changed           bool   `json:"changed"`
-	IconFile          string `json:"icon_file"`
-	NewHash           string `json:"new_hash"`
-	NewFetchTime      string `json:"new_fetch_time"`
+	Domain            string      `json:"domain"`
+	PreviousHash      string      `json:"previous_hash"`
+	PreviousFetchTime string      `json:"previous_fetch_time"`
+	Changed           bool        `json:"changed"`
+	IconFile          string      `json:"icon_file"`
+	NewHash           string      `json:"new_hash"`
+	NewFetchTime      string      `json:"new_fetch_time"`
 }
 
 // Extract favicon
@@ -57,27 +57,30 @@ func extract(r *Req) (*Res, error) {
 	}
 
 	res := &Res{
-		Domain: r.Domain,
-		ID: r.ID,
-		PreviousHash: r.PreviousHash,
+		Domain:            r.Domain,
+		ID:                r.ID,
+		PreviousHash:      r.PreviousHash,
 		PreviousFetchTime: r.PreviousFetchTime,
-		NewFetchTime: time.Now().Format(time.RFC3339),
-		NewHash: hash,
-		Changed: changed,
-		IconFile: filepath,
+		NewFetchTime:      time.Now().Format(time.RFC3339),
+		NewHash:           hash,
+		Changed:           changed,
+		IconFile:          filepath,
 	}
 
 	return res, nil
 }
 
-func processRequest(rch <-chan *Req, outCh chan<- *Res, ws *sync.WaitGroup) {
+func processRequest(rch <-chan *Req, outCh chan<- *Res, ws *sync.WaitGroup, mon *selfMonitor) {
 	for r := range rch {
 		res, err := extract(r)
+
 		if err != nil {
 			log.Println(err)
-			continue
+			mon.AddFailed()
+		} else {
+			mon.AddProcessed()
+			outCh <- res
 		}
-		outCh <- res
 	}
 	ws.Done()
 }
@@ -88,7 +91,7 @@ func processResult(res <-chan *Res) {
 		if err != nil {
 			log.Println(err)
 		} else {
-			fmt.Println(string(bytes))
+			fmt.Printf("%s,\n", string(bytes))
 		}
 	}
 }
@@ -99,16 +102,19 @@ func main() {
 
 	var ws sync.WaitGroup
 
+	monitor := NewSelfMonitor()
+	monitor.Start()
+
 	go processResult(outCh)
 
 	for i := 0; i < 10; i++ {
 		ws.Add(1)
-		go processRequest(reqCh, outCh, &ws)
+		go processRequest(reqCh, outCh, &ws, monitor)
 	}
 
 	reader := bufio.NewScanner(os.Stdin)
 	for reader.Scan() {
-		data := []byte(reader.Text())
+		data := []byte(strings.TrimSuffix(reader.Text(), ","))
 
 		var req *Req
 		err := json.Unmarshal(data, &req)
