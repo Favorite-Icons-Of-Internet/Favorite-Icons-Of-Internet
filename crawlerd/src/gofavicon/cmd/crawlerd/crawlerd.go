@@ -8,6 +8,7 @@ import (
 	"gofavicon"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 	"strings"
 	"sync"
@@ -36,7 +37,12 @@ type Res struct {
 func extract(r *Req) (*Res, error) {
 	e := gofavicon.NewExtractor()
 
-	ico, err := e.Extract(r.Domain)
+	d, err := resolveDomain(r.Domain, 10*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	ico, err := e.Extract(d)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +63,7 @@ func extract(r *Req) (*Res, error) {
 	}
 
 	res := &Res{
-		Domain:            r.Domain,
+		Domain:            d,
 		ID:                r.ID,
 		PreviousHash:      r.PreviousHash,
 		PreviousFetchTime: r.PreviousFetchTime,
@@ -94,6 +100,39 @@ func processResult(res <-chan *Res) {
 			fmt.Printf("%s,\n", string(bytes))
 		}
 	}
+}
+
+func resolveDomain(d string, timeout time.Duration) (string, error) {
+	hostExists := func(h string) bool {
+		ch := lookupHost(h)
+		select {
+		case r := <-ch:
+			return r
+		case <- time.After(timeout):
+			return false
+		}
+	}
+
+	if hostExists(d) {
+		return d, nil
+	}
+
+	w := fmt.Sprintf("www.%s", d)
+	if hostExists(w) {
+		return w, nil
+	}
+
+	return "", fmt.Errorf("domain %s not resolved", d)
+}
+
+func lookupHost(h string) chan bool {
+	ch := make(chan bool)
+	go func() {
+		_, err := net.LookupHost(h)
+		ch <- err == nil
+		close(ch)
+	}()
+	return ch
 }
 
 func main() {
