@@ -59,7 +59,10 @@ func extract(r *Req) (*Res, error) {
 	if changed {
 		file, _ := ioutil.TempFile(os.TempDir(), "")
 		file.Write(ico.Image)
-		filepath = file.Name()
+		filepath = file.Name() + ico.ImageExt
+		if file.Name() != filepath {
+			os.Rename(file.Name(), filepath)
+		}
 	}
 
 	res := &Res{
@@ -108,7 +111,7 @@ func resolveDomain(d string, timeout time.Duration) (string, error) {
 		select {
 		case r := <-ch:
 			return r
-		case <- time.After(timeout):
+		case <-time.After(timeout):
 			return false
 		}
 	}

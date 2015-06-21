@@ -108,6 +108,7 @@ func (e Extractor) ExtractFromURL(u string) (*Favicon, error) {
 
 	i := &Favicon{
 		ImageURL: faviconURL,
+		ImageExt: rel.Ext(),
 		Image:    icon.Body,
 	}
 
@@ -129,6 +130,7 @@ func (e Extractor) ExtractDefault(s string) (*Favicon, error) {
 	i := &Favicon{
 		ImageURL: faviconURL,
 		Image:    icon.Body,
+		ImageExt: ".ico",
 	}
 
 	return i, nil
