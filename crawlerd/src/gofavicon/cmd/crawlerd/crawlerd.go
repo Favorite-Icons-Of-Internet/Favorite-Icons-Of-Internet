@@ -149,10 +149,8 @@ func main() {
 
 	go processResult(outCh)
 
-	for i := 0; i < 10; i++ {
-		ws.Add(1)
-		go processRequest(reqCh, outCh, &ws, monitor)
-	}
+	ws.Add(10)
+	for i := 0; i < 10; i++ { go processRequest(reqCh, outCh, &ws, monitor) }
 
 	reader := bufio.NewScanner(os.Stdin)
 	for reader.Scan() {
