@@ -153,6 +153,11 @@ func (e Extractor) Fetch(resource string) (*Content, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	if !httpSucceedStatus(res.StatusCode) {
+		return nil, fmt.Errorf("fetch failed %s. Status: %d - code not in valid range", resource, res.StatusCode)
+	}
+
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
@@ -166,4 +171,9 @@ func (e Extractor) Fetch(resource string) (*Content, error) {
 	page := &Content{body, loc}
 
 	return page, nil
+}
+
+// check http status code in range 200-206
+func httpSucceedStatus(code int) bool {
+	return code >= http.StatusOK && code <= http.StatusPartialContent
 }
