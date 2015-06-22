@@ -176,7 +176,10 @@ func execProcessor(filename string) ([]byte, error) {
 	args = append(args, filename)
 	out, err := exec.Command(args[0], args[1:]...).CombinedOutput()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf(`exec processor failed
+			args: %s
+			output: %s
+			error: %s`, strings.Join(args, " "), out, err)
 	}
 	return out, nil
 }
