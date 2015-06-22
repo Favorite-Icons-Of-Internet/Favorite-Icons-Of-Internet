@@ -37,3 +37,20 @@ func TestEmbeddedIcon(t *testing.T) {
 		t.Errorf("Invalid bytes length")
 	}
 }
+
+func TestEmbeddedExt(t *testing.T) {
+	var expected map[string]string = map[string]string {
+		"http://amazon.com/favicon.ico": ".ico",
+		"/favicon.ico": ".ico",
+		"https://website.com/sites/default/ico.png": ".png",
+		"data:image/png;base64,aaaaa": "",
+	}
+
+	for u, e := range expected {
+		r, _ := NewRelIcon(u)
+		if ext := r.Ext(); ext != e {
+			t.Errorf("invalid extension got \"%s\" expected \"%s\"", ext, e)
+		}
+	}
+
+}

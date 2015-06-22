@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"net/url"
+	"path"
 	"strings"
 )
 
@@ -55,4 +56,9 @@ func (rel RelIcon) Embedded() (string, []byte, error) {
 	}
 
 	return mimeType, bytes, nil
+}
+
+// Extract file extension from url or empty string if extension is not set
+func (rel RelIcon) Ext() string {
+	return path.Ext(rel.IconURL.Path)
 }
