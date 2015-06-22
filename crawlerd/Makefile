@@ -20,5 +20,11 @@ env:
 test:
 	$(GOTEST) gofavicon gofavicon/cmd/crawlerd/
 
+vet:
+	$(GOCMD) vet
+
+doc:
+	godoc -http=":8080"
+
 build:
 	CGO_ENABLED=0 $(GOINSTALL) $(APPNAME)/...

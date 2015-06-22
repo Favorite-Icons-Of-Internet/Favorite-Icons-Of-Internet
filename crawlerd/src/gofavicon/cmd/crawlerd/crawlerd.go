@@ -4,14 +4,25 @@ import (
 	"bufio"
 	"crypto/sha1"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"gofavicon"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+)
+
+var (
+	// path directory with downloaded icons
+	outputDir string
+	// path to executable icon processor
+	iconProcessor string
 )
 
 type Req struct {
@@ -36,7 +47,12 @@ type Res struct {
 func extract(r *Req) (*Res, error) {
 	e := gofavicon.NewExtractor()
 
-	ico, err := e.Extract(r.Domain)
+	d, err := resolveDomain(r.Domain, 10*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	ico, err := e.Extract(d)
 	if err != nil {
 		return nil, err
 	}
@@ -49,22 +65,41 @@ func extract(r *Req) (*Res, error) {
 		changed = true
 	}
 
-	var filepath string
+	var fpath string
+
 	if changed {
-		file, _ := ioutil.TempFile(os.TempDir(), "")
+		file, _ := ioutil.TempFile(outputDir, "")
 		file.Write(ico.Image)
-		filepath = file.Name()
+		fpath = file.Name() + ico.ImageExt
+		if file.Name() != fpath {
+			os.Rename(file.Name(), fpath)
+		}
+	}
+
+	// run icon processor
+	if len(iconProcessor) > 0 {
+		abspath, err := filepath.Abs(fpath)
+		if err != nil {
+			return nil, err
+		}
+
+		b, err := execProcessor(abspath)
+		if err != nil {
+			return nil, fmt.Errorf("can't process file %s, error: %s, domain: %s", abspath, err, d)
+		}
+
+		fpath = strings.TrimSpace(string(b))
 	}
 
 	res := &Res{
-		Domain:            r.Domain,
+		Domain:            d,
 		ID:                r.ID,
 		PreviousHash:      r.PreviousHash,
 		PreviousFetchTime: r.PreviousFetchTime,
 		NewFetchTime:      time.Now().Format(time.RFC3339),
 		NewHash:           hash,
 		Changed:           changed,
-		IconFile:          filepath,
+		IconFile:          fpath,
 	}
 
 	return res, nil
@@ -96,7 +131,66 @@ func processResult(res <-chan *Res) {
 	}
 }
 
+func resolveDomain(d string, timeout time.Duration) (string, error) {
+	hostExists := func(h string) bool {
+		ch := lookupHost(h)
+		select {
+		case r := <-ch:
+			return r
+		case <-time.After(timeout):
+			return false
+		}
+	}
+
+	if hostExists(d) {
+		return d, nil
+	}
+
+	w := fmt.Sprintf("www.%s", d)
+	if hostExists(w) {
+		return w, nil
+	}
+
+	return "", fmt.Errorf("domain %s not resolved", d)
+}
+
+func lookupHost(h string) chan bool {
+	ch := make(chan bool)
+	go func() {
+		_, err := net.LookupHost(h)
+		ch <- err == nil
+		close(ch)
+	}()
+	return ch
+}
+
+func checkDirectory(p string) {
+	err := os.MkdirAll(p, 0744)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func execProcessor(filename string) ([]byte, error) {
+	args := strings.Split(iconProcessor, " ")
+	args = append(args, filename)
+	out, err := exec.Command(args[0], args[1:]...).CombinedOutput()
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func init() {
+	flag.StringVar(&outputDir, "output", "icons", "path to downloaded icons")
+	flag.StringVar(&iconProcessor, "processor", "", "path to executable applied to each icon")
+}
+
 func main() {
+	flag.Parse()
+
+	checkDirectory(outputDir)
+
 	var reqCh = make(chan *Req, 10)
 	var outCh = make(chan *Res)
 
@@ -107,8 +201,8 @@ func main() {
 
 	go processResult(outCh)
 
+	ws.Add(10)
 	for i := 0; i < 10; i++ {
-		ws.Add(1)
 		go processRequest(reqCh, outCh, &ws, monitor)
 	}
 
