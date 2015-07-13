@@ -16,10 +16,10 @@ mkdir $TEMP_FOLDER4
 
 dequeue FaviconPipelineDomains ./crawlerd/bin/crawlerd --output $TEMP_FOLDER3 2>/dev/null >$TEMP_FOLDER3/favicon.manifest
 
-perl step4.pl --folder $TEMP_FOLDER4 <$TEMP_FOLDER3/favicon.manifest >$TEMP_FOLDER4/favicon.manifest
+perl step4.pl --folder $TEMP_FOLDER4 <$TEMP_FOLDER3/favicon.manifest >$TEMP_FOLDER4/favicon.manifest 2>/dev/null
 rm -rf $TEMP_FOLDER3
 
-./smu.sh $TEMP_FOLDER4/* 2>&1 >/dev/null
+./smu.sh $TEMP_FOLDER4/* >/dev/null 2>&1
 
 tar -C /tmp/$TEMP_NAME4 -c . |gzip >/tmp/$TEMP_NAME4.tar.gz
 rm -rf $TEMP_FOLDER4
