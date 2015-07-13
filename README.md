@@ -26,13 +26,13 @@ Runs on central box. See [steps_1_and_2.sh](https://github.com/sergeychernyshev/
 
 Listens for messages in a queue and crawls the sites in the message finding favorite icons and comparing them to existing version to see if the have changed.
 
-Runs on crawler workers. [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/1) (To Be Developed)
+Runs on crawler workers. See [steps_3_and_4.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/steps_3_and_4.sh)
 
 ### Step 4. [Convert icons to PNG](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4)
 
 After all icons are fetched, convert them to PNG, calculate average color and upload to results storage together with manifest describing which icons are new, which has changed and etc.
 
-Runs on crawler workers. See [steps4.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/step4.sh)
+Runs on crawler workers. See [steps_3_and_4.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/steps_3_and_4.sh)
 
 ### Step 5. [Calculate tiles to be updated](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4)
 
