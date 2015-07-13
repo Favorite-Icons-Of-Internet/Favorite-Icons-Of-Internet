@@ -10,36 +10,53 @@ Our current goal is to bring the project to the state where we can keep the hist
 
 ## Processing Steps
 
-### Step 1. [Load domains](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/2) (on central box)
+### Step 1. [Load domains](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/2)
 
 Updates a list of domains in the database, currently takes a list of Alexa Rankings.
 
-### Step 2. [Get a list of domains to crawl](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/3) (on central box)
+Runs on central box. See [steps_1_and_2.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/steps_1_and_2.sh)
+
+### Step 2. [Get a list of domains to crawl](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/3)
 
 Gets a list of domains to crawl (currently only active Alexa domains) and uploads them to a queue in chunks for crawlers to pick up
 
-### Step 3. [Fetch icons](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/1) (on crawler workers)
+Runs on central box. See [steps_1_and_2.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/steps_1_and_2.sh)
+
+### Step 3. [Fetch icons](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/1)
 
 Listens for messages in a queue and crawls the sites in the message finding favorite icons and comparing them to existing version to see if the have changed.
 
-### Step 4. [Convert icons to PNH](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4) (on crawler workers)
+Runs on crawler workers. [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/1) (To Be Developed)
+
+### Step 4. [Convert icons to PNG](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4)
 
 After all icons are fetched, convert them to PNG, calculate average color and upload to results storage together with manifest describing which icons are new, which has changed and etc.
 
-### Step 5. [Calculate tiles to be updated] (https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4) (on central box)
+Runs on crawler workers. See [steps4.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/step4.sh)
+
+### Step 5. [Calculate tiles to be updated](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4)
 
 Gather all the results and update the database. Calculate a list of tiles that need to be updated (currently all tiles with predefined width/height ordered by Alexa ranking) and put each tile as a job into a queue.
 
-Generate HTML and necessary JSON metadata/
+Generate HTML and necessary JSON metadata.
 
-### Step 6. [Generate tiles](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/6) (on tile workers)
+Runs on central box. [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4) (To Be Developed)
+
+### Step 6. [Generate tiles](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/6)
 
 Grab images required for the tile (or sync them all) and generate a tile. Optimize the image using smu.sh and deploy to a CDN.
 
-### Step 7. [Move HTML and metadata to production](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/6) (on central box)
+Runs on tile workers. [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/6) (To Be Developed)
+
+### Step 7. [Move HTML and metadata to production](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/7)
 
 Once all tiles are done, move HTML and metadata chunks over to production!
 
-## Step 8. [Send emails, daily reports and etc](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/8) (on central box)
+Runs on central box. [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/7) (To Be Developed)
+
+## Step 8. [Send emails, daily reports and etc](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/8)
 
 Notify users (if any), send daily newsletter and etc.
+
+Runs on central box (and SMTP workers if load is high). [TBD](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/8) (To Be Developed)
+
