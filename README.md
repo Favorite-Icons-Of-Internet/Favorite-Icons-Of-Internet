@@ -34,7 +34,7 @@ After all icons are fetched, convert them to PNG, calculate average color and up
 
 Runs on crawler workers. See [steps_3_and_4.sh](https://github.com/sergeychernyshev/Favorite-Icons-Of-Internet/blob/master/steps_3_and_4.sh)
 
-### Step 5. [Calculate tiles to be updated](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/4) :red_circle:
+### Step 5. [Calculate tiles to be updated](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/5) :red_circle:
 
 Gather all the results and update the database. Calculate a list of tiles that need to be updated (currently all tiles with predefined width/height ordered by Alexa ranking) and put each tile as a job into a queue.
 
