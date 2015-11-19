@@ -21,6 +21,13 @@ $versions[_]['down'][]	= "";
 */
 
 /* -------------------------------------------------------------------------------------------------------
+ * VERSION 5
+ * Changing icon hash field type to match one used in domains
+*/
+$versions[5]['up'][] = "ALTER TABLE `icons` MODIFY `checksum` VARCHAR( 100 ) NOT NULL COMMENT 'HASH of original icon file'";
+$versions[5]['down'][]	= "ALTER TABLE `icons` MODIFY `checksum` BIGINT( 20 ) UNSIGNED NOT NULL COMMENT 'Checksum of original icon file'";
+
+/* -------------------------------------------------------------------------------------------------------
  * VERSION 4
  * Adding previous hash and fetch time columns
 */
