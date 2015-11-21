@@ -42,3 +42,11 @@ rm -rf /tmp/.favicon_result
 # Clean up temporary folder
 rm -rf $RESULTSFOLDER
 
+# Generate tile metadata and HTML file jobs for all domains that have icons and html file with links to all tiles
+rm -rf /tmp/.step5_tiles
+mkdir -p /tmp/.step5_tiles
+php step5tiles.php /tmp/.step5_tiles /tmp/.step5.html
+
+for i in $( ls /tmp/.step5/); do
+	enqueue FaviconPipelineTiles </tmp/.step5_tiles/$i
+done
