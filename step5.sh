@@ -53,6 +53,6 @@ rm -rf /tmp/.step5_tiles
 mkdir -p /tmp/.step5_tiles
 php step5tiles.php /tmp/.step5_tiles /tmp/.step5.html
 
-for i in $( ls /tmp/.step5/); do
-	enqueue FaviconPipelineTiles </tmp/.step5_tiles/$i
+for TILE in $( ls /tmp/.step5_tiles/); do
+	enqueue FaviconPipelineTiles </tmp/.step5_tiles/$TILE
 done
