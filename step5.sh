@@ -16,6 +16,12 @@ RESULTSFOLDER="/tmp/.favicon_results_$UUID/"
 # replace with "mv" command
 aws s3 mv --recursive s3://favoriteiconsofinternet.com/results/ $RESULTSFOLDER 2>&1 >/dev/null
 
+if [ ! -d $RESULTSFOLDER ]; then
+	echo "No results downloaded, sleeping for $DELAY";
+	sleep $DELAY
+	exit
+fi
+
 TOTALFILES=`ls -1 $RESULTSFOLDER/ | wc -l`
 
 if [ $TOTALFILES -eq 0 ]; then
