@@ -8,6 +8,10 @@ Our current goal is to bring the project to the state where we can keep the hist
 
 ![Favorite Icons](favicons-project-illustration.png)
 
+## Workers
+
+This project uses [Phantom Of The Cloud](https://github.com/sergeychernyshev/phantom-of-the-cloud) image to launch workers for parallelizable steps (3, 4, 6 and eventually 8), AWS auto-scaling groups can be used to speed-up or slow down processing.
+
 ## Processing Steps
 
 ### Step 1. [Load domains](https://github.com/Favorite-Icons-Of-Internet/Favorite-Icons-Of-Internet/issues/2)  :white_check_mark:
