@@ -16,6 +16,12 @@ RESULTSFOLDER="/tmp/.favicon_results_$UUID/"
 # replace with "mv" command
 aws s3 mv --recursive s3://favoriteiconsofinternet.com/results/ $RESULTSFOLDER 2>&1 >/dev/null
 
+if [ ! -d $RESULTSFOLDER ]; then
+	echo "No results downloaded, sleeping for $DELAY";
+	sleep $DELAY
+	exit
+fi
+
 TOTALFILES=`ls -1 $RESULTSFOLDER/ | wc -l`
 
 if [ $TOTALFILES -eq 0 ]; then
@@ -34,7 +40,7 @@ for TARBALL in $RESULTSFOLDER/*; do
 	fi
 
 	rm /tmp/.favicon_result/*
-	rm $RESULTSFOLDER/$TARBALL
+	rm $TARBALL
 done
 
 rm -rf /tmp/.favicon_result
@@ -42,3 +48,11 @@ rm -rf /tmp/.favicon_result
 # Clean up temporary folder
 rm -rf $RESULTSFOLDER
 
+# Generate tile metadata and HTML file jobs for all domains that have icons and html file with links to all tiles
+rm -rf /tmp/.step5_tiles
+mkdir -p /tmp/.step5_tiles
+php step5tiles.php /tmp/.step5_tiles /tmp/.step5.html
+
+for TILE in $( ls /tmp/.step5_tiles/); do
+	enqueue FaviconPipelineTiles </tmp/.step5_tiles/$TILE
+done
