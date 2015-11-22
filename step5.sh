@@ -34,7 +34,7 @@ for TARBALL in $RESULTSFOLDER/*; do
 	fi
 
 	rm /tmp/.favicon_result/*
-	rm $RESULTSFOLDER/$TARBALL
+	rm $TARBALL
 done
 
 rm -rf /tmp/.favicon_result
