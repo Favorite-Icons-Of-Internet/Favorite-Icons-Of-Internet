@@ -33,10 +33,14 @@ fi
 rm -rf /tmp/.favicon_result
 mkdir -p /tmp/.favicon_result
 for TARBALL in $RESULTSFOLDER/*; do
-	tar -C /tmp/.favicon_result -xzf $TARBALL
+	# Extracting manifest
+	tar -C /tmp/.favicon_result -xzf $TARBALL ./favicon.manifest
+
+	# Extracting icons directly into archive
+	tar -C $ICONSTORAGE -xzf $TARBALL --exclude ./favicon.manifest
 
 	if [ -f /tmp/.favicon_result/favicon.manifest ]; then
-		cat /tmp/.favicon_result/favicon.manifest | php step5ingest.php /tmp/.favicon_result $ICONSTORAGE
+		cat /tmp/.favicon_result/favicon.manifest | php step5ingest.php $ICONSTORAGE
 	fi
 
 	rm /tmp/.favicon_result/*
