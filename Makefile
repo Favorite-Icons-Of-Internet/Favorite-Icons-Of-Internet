@@ -20,3 +20,6 @@ parallel:
 
 test:
 	head -n${NUMICONS} ${DOMAINLIST} | perl geticons.pl --nogenimages --nofetch --width=${WIDTH}
+
+worker:
+	aws autoscaling set-desired-capacity --auto-scaling-group-name FaviconCrawlers --desired-capacity 1

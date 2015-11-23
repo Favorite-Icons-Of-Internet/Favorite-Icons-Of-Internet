@@ -7,8 +7,7 @@
  */
 require_once(__DIR__ . '/config.php');
 
-$result_temp_folder = $argv[1];
-$icon_archive = $argv[2];
+$icon_archive = $argv[1];
 
 $STDIN = fopen("php://stdin", 'r');
 
@@ -63,13 +62,12 @@ while($line = fgets($STDIN)) {
 	// two-level cache dir based on domain name's md5
 	$domain_hash = md5($icon_data['domain']);
 
-	if (!file_exists($result_temp_folder . "/" . $domain . ".png")) {
+	$icon_path = "$icon_archive/" . substr($domain_hash, 0, 2) . "/" . substr($domain_hash, 2, 2) . "/";
+
+	// do not update database if file doesn't exist
+	if (!file_exists($icon_path . "/" . $domain . "-" . $checksum . ".png")) {
 		continue;
 	}
-
-	$icon_path = "$icon_archive/" . substr($domain_hash, 0, 2) . "/" . substr($domain_hash, 2, 2) . "/";
-	@mkdir($icon_path, 0755, TRUE);
-	copy($result_temp_folder . "/" . $domain . ".png", $icon_path . "/" . $domain . "-" . $checksum . ".png");
 
 	/**
 	 * Now, let's insert new icon entry into database
