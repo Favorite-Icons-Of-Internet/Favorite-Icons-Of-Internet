@@ -21,21 +21,21 @@ while(<>) {
 	my $skip = !exists($$icon{"changed"}) || !$$icon{"changed"} || !exists($$icon{"icon_file"});
 
 	# No need for a temporary file name in results set
+	my $icon_file = $$icon{"icon_file"};
 	delete $$icon{"icon_file"};
-
-	print to_json($icon) . ",\n";
 
 	next if $skip;
 
 	my $image = Image::Magick->new;
-	my $x = $image->Read($$icon{"icon_file"});
+	my $x = $image->Read($icon_file);
 	warn $x if $x;
 
 	foreach my $i (@$image)
 	{
 		if ($i->Get('width') == 16 && $i->Get('height') == 16)
 		{
-			my $filename = $$icon{"domain"} . '-' . $$icon{"hash"} . ".png"
+			my $filename = $$icon{"domain"} . '-' . $$icon{"new_hash"} . ".png";
+
 			my $domain_hash = md5_hex($$icon{"domain"});
 			my $folder = $temp_folder . '/' . substr($domain_hash, 0, 2) . '/' . substr($domain_hash, 2, 2);
 
@@ -48,6 +48,8 @@ while(<>) {
 				$filename);
 
 			warn $x if $x;
+
+			print to_json($icon) . ",\n";
 			last;
 		}
 	}
